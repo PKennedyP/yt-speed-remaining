@@ -7,7 +7,7 @@ barra de tempo do player do YouTube, quanto tempo de video ainda falta
 Exemplo: um video de 20:00 assistido em 1.5x mostra `(⏱ 13:20)` de tempo real
 restante.
 
-![Print de exemplo] (yt-speed-remaining/icons/print.png)
+![Print de exemplo](https://github.com/PKennedyP/yt-speed-remaining/blob/main/icons/print.png?raw=true)
 
 ## Instalacao (modo desenvolvedor)
 
