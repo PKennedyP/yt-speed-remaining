@@ -1,6 +1,5 @@
 # YouTube Speed Time Remaining
 
-<<<<<<< HEAD
 Extensao para navegadores Chromium (Chrome, Edge, Brave) que mostra, dentro da
 barra de tempo do player do YouTube, quanto tempo de video ainda falta
 **ajustado pela velocidade de reproducao atual**, atualizando em tempo real.
