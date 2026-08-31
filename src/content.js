@@ -34,10 +34,28 @@
     );
   }
 
-  // O YouTube usa .ytp-time-current para o tempo mostrado a esquerda da barra.
-  // No modo "tempo restante" ele exibe algo como "-14:15".
+  // O YouTube mantem MAIS DE UM .ytp-time-current no DOM: alem do visivel,
+  // costuma haver um oculto (largura zero) que pode estar em modo decorrido.
+  // Um querySelector simples pega o primeiro — frequentemente o oculto — e a
+  // extensao acaba lendo/escrevendo no elemento errado, travando. Por isso
+  // escolhemos, dentro do player principal, o .ytp-time-current VISIVEL.
+  function isVisible(el) {
+    if (!el || el.offsetParent === null) return false;
+    const r = el.getBoundingClientRect();
+    return r.width > 0 && r.height > 0;
+  }
+
   function getCurrentTimeEl() {
-    return document.querySelector(".ytp-time-current");
+    const root =
+      document.querySelector("#movie_player") ||
+      document.querySelector(".html5-video-player") ||
+      document;
+    const candidates = root.querySelectorAll(".ytp-time-current");
+    if (candidates.length === 0) return null;
+    for (const el of candidates) {
+      if (isVisible(el)) return el;
+    }
+    return candidates[0];
   }
 
   // ---- Reescrever o elemento nativo com o tempo ajustado pela velocidade ----
@@ -94,7 +112,12 @@
     const video = getVideoEl();
     const el = getCurrentTimeEl();
     if (!video || !el) return;
-    if (boundVideo === video && updateTimer !== null) return; // ja ativo
+    // So pulamos se ja estamos ligados ao mesmo <video> E ao mesmo elemento de
+    // tempo visivel. Se o elemento visivel trocou (ex.: o player terminou de
+    // montar e o .ytp-time-current visivel passou a ser outro), religamos.
+    if (boundVideo === video && boundTimeEl === el && updateTimer !== null) {
+      return; // ja ativo no estado atual
+    }
     stopUpdating();
     boundVideo = video;
 
